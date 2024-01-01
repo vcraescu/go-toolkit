@@ -26,10 +26,8 @@ type JSONLogger struct {
 
 func New() *JSONLogger {
 	return &JSONLogger{
-		logger: slog.New(slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{
-			AddSource: true,
-		})),
-		ctx: context.Background(),
+		logger: slog.New(slog.NewJSONHandler(os.Stderr, nil)),
+		ctx:    context.Background(),
 	}
 }
 
