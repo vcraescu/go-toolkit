@@ -60,7 +60,7 @@ func Start(handler Handler, opts ...Option) {
 	}
 
 	if options.appName != "" {
-		ctx.logger = options.logger.With(ctx, slog.String("app", options.appName))
+		ctx.logger = options.logger.With(ctx.context, slog.String("app", options.appName))
 	}
 
 	if options.terminateTimeout > 0 {
