@@ -14,14 +14,10 @@ func NewNopLogger() *NopLogger {
 	return &NopLogger{}
 }
 
-func (l NopLogger) InfoContext(ctx context.Context, msg string, args ...any) {}
+func (l NopLogger) Info(ctx context.Context, msg string, args ...any) {}
 
-func (l NopLogger) ErrorContext(ctx context.Context, msg string, args ...any) {}
+func (l NopLogger) Error(ctx context.Context, msg string, args ...any) {}
 
-func (l NopLogger) Info(msg string, args ...any) {}
+func (l NopLogger) Warn(ctx context.Context, msg string, args ...any) {}
 
-func (l NopLogger) Error(msg string, args ...any) {}
-
-func (l NopLogger) Warn(msg string, args ...any) {}
-
-func (l NopLogger) WarnContext(ctx context.Context, msg string, args ...any) {}
+func (l NopLogger) Debug(ctx context.Context, msg string, args ...any) {}

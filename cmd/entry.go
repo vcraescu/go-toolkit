@@ -95,7 +95,7 @@ func TerminateContext(ctx context.Context, timeout time.Duration, logger log.Log
 		defer cancel()
 		sig := <-ch
 
-		logger.Info("terminating...", slog.String("sig", sig.String()))
+		logger.Info(ctx, "terminating...", log.Any("sig", sig.String()))
 
 		time.Sleep(timeout)
 	}()
