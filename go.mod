@@ -3,6 +3,8 @@ module github.com/vcraescu/go-toolkit
 go 1.21.5
 
 require (
+	github.com/aws/aws-lambda-go v1.43.0
+	github.com/awslabs/aws-lambda-go-api-proxy v0.16.0
 	github.com/joho/godotenv v1.5.1
 	github.com/labstack/echo/v4 v4.11.4
 	github.com/stretchr/testify v1.8.4
@@ -12,7 +14,7 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/go-logr/logr v1.3.0 // indirect
+	github.com/go-logr/logr v1.4.1 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/labstack/gommon v0.4.2 // indirect

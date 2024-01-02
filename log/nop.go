@@ -2,22 +2,22 @@ package log
 
 import "context"
 
-var _ Logger = (*NopLogger)(nil)
+var _ Logger = (*Nop)(nil)
 
-type NopLogger struct{}
+type Nop struct{}
 
-func (l NopLogger) With(args ...any) Logger {
+func (l Nop) With(args ...any) Logger {
 	return l
 }
 
-func NewNopLogger() *NopLogger {
-	return &NopLogger{}
+func NewNop() *Nop {
+	return &Nop{}
 }
 
-func (l NopLogger) Info(ctx context.Context, msg string, args ...any) {}
+func (l Nop) Info(ctx context.Context, msg string, args ...any) {}
 
-func (l NopLogger) Error(ctx context.Context, msg string, args ...any) {}
+func (l Nop) Error(ctx context.Context, msg string, args ...any) {}
 
-func (l NopLogger) Warn(ctx context.Context, msg string, args ...any) {}
+func (l Nop) Warn(ctx context.Context, msg string, args ...any) {}
 
-func (l NopLogger) Debug(ctx context.Context, msg string, args ...any) {}
+func (l Nop) Debug(ctx context.Context, msg string, args ...any) {}

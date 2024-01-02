@@ -55,3 +55,12 @@ func WithDecoder(decoder Decoder) GetOption {
 		options.decoders = append(options.decoders, decoder)
 	})
 }
+
+func newOptions(opts ...Option) *options {
+	options := &options{}
+	for _, opt := range opts {
+		opt.apply(options)
+	}
+
+	return options
+}

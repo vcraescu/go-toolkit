@@ -28,11 +28,7 @@ type env struct {
 }
 
 func NewFromEnv(opts ...Option) Getter {
-	options := &options{}
-	for _, opt := range opts {
-		opt.apply(options)
-	}
-
+	options := newOptions(opts...)
 	_ = godotenv.Load(options.filenames...)
 
 	return &env{

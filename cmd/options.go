@@ -5,6 +5,7 @@ import (
 	"github.com/vcraescu/go-toolkit/config"
 	"github.com/vcraescu/go-toolkit/log"
 	"go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace/noop"
 	"time"
 )
 
@@ -63,4 +64,22 @@ func WithContext(ctx context.Context) Option {
 	return optionFunc(func(options *options) {
 		options.ctx = ctx
 	})
+}
+
+func newOptions(opts ...Option) *options {
+	options := &options{
+		logger:        log.New(),
+		traceProvider: noop.NewTracerProvider(),
+		ctx:           context.Background(),
+	}
+
+	for _, opt := range opts {
+		opt.apply(options)
+	}
+
+	if options.logger == nil {
+		options.logger = log.NewNop()
+	}
+
+	return options
 }
