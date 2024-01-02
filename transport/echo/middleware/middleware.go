@@ -16,16 +16,16 @@ func WithLogger(logger log.Logger) echo.MiddlewareFunc {
 		LogError:    true,
 		HandleError: true,
 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
-			logger := logger.With(
-				c.Request().Context(), slog.String("uri", v.URI), slog.Int("status", v.Status))
+			ctx := c.Request().Context()
+			logger := logger.With(slog.String("uri", v.URI), slog.Int("status", v.Status))
 
 			if v.Error != nil {
-				logger.Error("REQ_ERR", log.Error(v.Error))
+				logger.Error(ctx, "REQ_ERR", log.Error(v.Error))
 
 				return nil
 			}
 
-			logger.Info("REQ")
+			logger.Info(ctx, "REQ")
 
 			return nil
 		},
