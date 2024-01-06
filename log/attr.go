@@ -28,16 +28,6 @@ func newAttr(a slog.Attr) Attr {
 	return attr{internal: a}
 }
 
-func toSlogAttrs(attrs ...any) []any {
-	for i, attr := range attrs {
-		if a, ok := attr.(Attr); ok {
-			attrs[i] = a.getInternal()
-		}
-	}
-
-	return attrs
-}
-
 func (a attr) getInternal() slog.Attr {
 	return a.internal
 }

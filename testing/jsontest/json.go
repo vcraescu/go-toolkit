@@ -14,3 +14,10 @@ func Marshal(t *testing.T, v any) []byte {
 
 	return b
 }
+
+func Unmarshal(t *testing.T, b []byte, v any) {
+	t.Helper()
+
+	err := json.Unmarshal(b, v)
+	require.NoError(t, err)
+}

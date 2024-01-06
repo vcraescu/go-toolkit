@@ -3,10 +3,9 @@ package log_test
 import (
 	"bytes"
 	"context"
-	"encoding/json"
-	"fmt"
 	"github.com/stretchr/testify/require"
 	"github.com/vcraescu/go-toolkit/log"
+	"github.com/vcraescu/go-toolkit/testing/jsontest"
 	"go.opentelemetry.io/otel/trace"
 	"log/slog"
 	"testing"
@@ -22,23 +21,24 @@ func TestNew(t *testing.T) {
 		ctx := trace.ContextWithSpanContext(context.Background(), newSpanContext())
 		buf := &bytes.Buffer{}
 
-		logger := log.New(log.WithOutput(buf), log.WithClock(now))
+		logger := log.New(log.WithOutput(buf), log.WithClock(now)).
+			With(log.String("a", "b"))
 
-		logger.Info(ctx, "test", slog.String("c", "d"))
+		logger.Info(ctx, "test", log.String("c", "d"))
 
-		want := map[string]string{
+		want := map[string]any{
 			slog.TimeKey:    now.Format(time.RFC3339),
 			slog.LevelKey:   log.LevelInfo.String(),
 			slog.MessageKey: "test",
 			slog.SourceKey:  "log/logger_test.go:27",
 			log.TraceIDKey:  "0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a",
 			log.SpanIDKey:   "0a0a0a0a0a0a0a0a",
+			"a":             "b",
 			"c":             "d",
 		}
-		var got map[string]string
+		var got map[string]any
 
-		fmt.Println(buf.String())
-		mustUnmarshal(t, buf.Bytes(), &got)
+		jsontest.Unmarshal(t, buf.Bytes(), &got)
 		require.Equal(t, want, got)
 	})
 
@@ -54,9 +54,4 @@ func TestNew(t *testing.T) {
 
 		require.Empty(t, buf.Bytes())
 	})
-}
-
-func mustUnmarshal(t *testing.T, b []byte, v any) {
-	err := json.Unmarshal(b, v)
-	require.NoError(t, err)
 }

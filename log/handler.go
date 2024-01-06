@@ -3,7 +3,6 @@ package log
 import (
 	"context"
 	"fmt"
-	"go.opentelemetry.io/otel/trace"
 	"log/slog"
 	"path"
 	"runtime"
@@ -43,11 +42,11 @@ func (h *DefaultHandler) Handle(ctx context.Context, record slog.Record) error {
 }
 
 func (h *DefaultHandler) WithAttrs(attrs []slog.Attr) slog.Handler {
-	return &DefaultHandler{handler: h.handler.WithAttrs(attrs)}
+	return &DefaultHandler{handler: h.handler.WithAttrs(attrs), clock: h.clock}
 }
 
 func (h *DefaultHandler) WithGroup(name string) slog.Handler {
-	return &DefaultHandler{handler: h.handler.WithGroup(name)}
+	return &DefaultHandler{handler: h.handler.WithGroup(name), clock: h.clock}
 }
 
 func (h *DefaultHandler) getSourceAttr(pc uintptr) slog.Attr {
@@ -67,21 +66,6 @@ func (h *DefaultHandler) getSourceAttr(pc uintptr) slog.Attr {
 	return slog.String(slog.SourceKey, fmt.Sprintf("%s:%d", file, f.Line))
 }
 
-func (h *DefaultHandler) getTraceAttrsFromContext(ctx context.Context) []slog.Attr {
-	attrs := make([]slog.Attr, 0)
-	spanCtx := trace.SpanContextFromContext(ctx)
-
-	if spanCtx.TraceID().IsValid() {
-		attrs = append(attrs, slog.String(TraceIDKey, spanCtx.TraceID().String()))
-	}
-
-	if spanCtx.SpanID().IsValid() {
-		attrs = append(attrs, slog.String(SpanIDKey, spanCtx.SpanID().String()))
-	}
-
-	return attrs
-}
-
-func (h *DefaultHandler) setClock(now time.Time) {
-	h.clock = now
+func (h *DefaultHandler) setClock(clock time.Time) {
+	h.clock = clock
 }

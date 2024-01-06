@@ -6,7 +6,6 @@ import (
 	"github.com/vcraescu/go-toolkit/log"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/trace"
-	"log/slog"
 	"os"
 	"os/signal"
 	"time"
@@ -47,7 +46,7 @@ func Start(handler Handler, opts ...Option) {
 	}
 
 	if options.appName != "" {
-		ctx.logger = options.logger.With(ctx.context, slog.String("app", options.appName))
+		ctx.logger = options.logger.With(log.String("app", options.appName))
 	}
 
 	if options.terminateTimeout > 0 {
@@ -82,7 +81,12 @@ func TerminateContext(ctx context.Context, timeout time.Duration, logger log.Log
 		defer cancel()
 		sig := <-ch
 
-		logger.Info(ctx, "terminating...", log.Any("sig", sig.String()))
+		logger.Info(
+			ctx,
+			"terminating...",
+			log.String("sig", sig.String()),
+			log.String("timeout", timeout.String()),
+		)
 
 		time.Sleep(timeout)
 	}()
