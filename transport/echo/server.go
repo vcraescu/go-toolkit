@@ -32,11 +32,11 @@ func NewServer(opts ...ServerOption) *Server {
 		middlewares = append(middlewares, middleware.WithLogger(options.logger))
 	}
 
+	e.Use(middlewares...)
+
 	if options.healthHandler != nil {
 		e.GET("/health", options.healthHandler)
 	}
-
-	e.Use(middlewares...)
 
 	return &Server{
 		Echo:   e,
