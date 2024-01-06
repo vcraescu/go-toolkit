@@ -6,7 +6,6 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/vcraescu/go-toolkit/log"
 	"go.opentelemetry.io/otel/trace"
-	"log/slog"
 )
 
 func WithLogger(logger log.Logger) echo.MiddlewareFunc {
@@ -17,7 +16,7 @@ func WithLogger(logger log.Logger) echo.MiddlewareFunc {
 		HandleError: true,
 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
 			ctx := c.Request().Context()
-			logger := logger.With(slog.String("uri", v.URI), slog.Int("status", v.Status))
+			logger := logger.With(log.String("uri", v.URI), log.Int("status", v.Status))
 
 			if v.Error != nil {
 				logger.Error(ctx, "REQ_ERR", log.Error(v.Error))

@@ -47,7 +47,7 @@ func NewServer(opts ...ServerOption) *Server {
 func (s *Server) Start(ctx context.Context, address string) error {
 	go s.handleShutdown(ctx)
 
-	s.logger.Info(ctx, "server started", log.Any("address", address))
+	s.logger.Info(ctx, "server started", log.String("address", address))
 
 	if err := s.Echo.Start(address); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return err
@@ -59,9 +59,9 @@ func (s *Server) Start(ctx context.Context, address string) error {
 func (s *Server) handleShutdown(ctx context.Context) {
 	<-ctx.Done()
 
-	s.logger.Info(ctx, "shutting down...")
+	s.logger.Info(ctx, "server is shutting down...")
 
 	if err := s.Shutdown(ctx); err != nil {
-		s.logger.Error(ctx, "shutdown failed", log.Error(err))
+		s.logger.Error(ctx, "server shutdown failed", log.Error(err))
 	}
 }

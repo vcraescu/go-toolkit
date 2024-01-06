@@ -17,7 +17,7 @@ type JSONLogger struct {
 	*slog.Logger
 }
 
-func New(opts ...Option) *JSONLogger {
+func New(opts ...Option) Logger {
 	options := newOptions(opts...)
 
 	h := NewHandler(slog.NewJSONHandler(options.output, &slog.HandlerOptions{
@@ -31,6 +31,8 @@ func New(opts ...Option) *JSONLogger {
 }
 
 func (l *JSONLogger) With(args ...any) Logger {
+	l.convertAttrs(args)
+
 	return &JSONLogger{
 		Logger: l.Logger.With(args...),
 	}
