@@ -36,8 +36,8 @@ func (h *DefaultHandler) Handle(ctx context.Context, record slog.Record) error {
 		record.Time = h.clock
 	}
 
-	record.AddAttrs(h.getSourceAttr(record.PC))
-	record.AddAttrs(Trace(ctx)...)
+	attrs := append(traceAttrs(ctx), h.getSourceAttr(record.PC))
+	record.AddAttrs(attrs...)
 
 	return h.handler.Handle(ctx, record)
 }

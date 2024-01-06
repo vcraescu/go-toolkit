@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/stretchr/testify/require"
 	"github.com/vcraescu/go-toolkit/log"
 	"go.opentelemetry.io/otel/trace"
@@ -29,13 +30,14 @@ func TestNew(t *testing.T) {
 			slog.TimeKey:    now.Format(time.RFC3339),
 			slog.LevelKey:   log.LevelInfo.String(),
 			slog.MessageKey: "test",
-			slog.SourceKey:  "log/logger_test.go:26",
+			slog.SourceKey:  "log/logger_test.go:27",
 			log.TraceIDKey:  "0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a",
 			log.SpanIDKey:   "0a0a0a0a0a0a0a0a",
 			"c":             "d",
 		}
 		var got map[string]string
 
+		fmt.Println(buf.String())
 		mustUnmarshal(t, buf.Bytes(), &got)
 		require.Equal(t, want, got)
 	})

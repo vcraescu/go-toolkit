@@ -3,7 +3,6 @@ package log
 import (
 	"context"
 	"log/slog"
-	"os"
 )
 
 type Logger interface {
@@ -19,14 +18,7 @@ type JSONLogger struct {
 }
 
 func New(opts ...Option) *JSONLogger {
-	options := &options{
-		level:  LevelInfo,
-		output: os.Stderr,
-	}
-
-	for _, opt := range opts {
-		opt.apply(options)
-	}
+	options := newOptions(opts...)
 
 	h := NewHandler(slog.NewJSONHandler(options.output, &slog.HandlerOptions{
 		Level: slog.Level(options.level),
@@ -45,17 +37,33 @@ func (l *JSONLogger) With(args ...any) Logger {
 }
 
 func (l *JSONLogger) Info(ctx context.Context, msg string, args ...any) {
+	l.convertAttrs(args)
+
 	l.Logger.InfoContext(ctx, msg, args...)
 }
 
 func (l *JSONLogger) Error(ctx context.Context, msg string, args ...any) {
+	l.convertAttrs(args)
+
 	l.Logger.ErrorContext(ctx, msg, args...)
 }
 
 func (l *JSONLogger) Warn(ctx context.Context, msg string, args ...any) {
+	l.convertAttrs(args)
+
 	l.Logger.WarnContext(ctx, msg, args...)
 }
 
 func (l *JSONLogger) Debug(ctx context.Context, msg string, args ...any) {
+	l.convertAttrs(args)
+
 	l.Logger.DebugContext(ctx, msg, args...)
+}
+
+func (l *JSONLogger) convertAttrs(args []any) {
+	for i, arg := range args {
+		if a, ok := arg.(Attr); ok {
+			args[i] = a.getInternal()
+		}
+	}
 }

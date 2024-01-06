@@ -3,6 +3,7 @@ package log
 import (
 	"io"
 	"log/slog"
+	"os"
 	"time"
 )
 
@@ -47,4 +48,17 @@ func WithLevel(level Level) Option {
 	return optionFunc(func(opts *options) {
 		opts.level = level
 	})
+}
+
+func newOptions(opts ...Option) *options {
+	options := &options{
+		level:  LevelInfo,
+		output: os.Stderr,
+	}
+
+	for _, opt := range opts {
+		opt.apply(options)
+	}
+
+	return options
 }
