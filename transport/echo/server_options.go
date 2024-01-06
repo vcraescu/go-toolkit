@@ -38,6 +38,12 @@ func WithHealth(h echo.HandlerFunc) ServerOption {
 	})
 }
 
+func WithLogger(logger log.Logger) ServerOption {
+	return serverOptionFunc(func(opts *serverOptions) {
+		opts.logger = logger
+	})
+}
+
 func newServerOptions(opts ...ServerOption) *serverOptions {
 	options := &serverOptions{
 		tracer:        noop.NewTracerProvider().Tracer("noop"),
